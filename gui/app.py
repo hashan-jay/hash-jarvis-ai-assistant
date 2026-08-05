@@ -1,4 +1,4 @@
-"""CustomTkinter chat UI for HASH-JARVIS."""
+"""CustomTkinter chat UI for ZYNTAKSgenAI."""
 
 from __future__ import annotations
 
@@ -12,10 +12,13 @@ import customtkinter as ctk
 import config
 from backend.chat_service import ChatService
 from gui import theme
+from gui.fonts import load_app_fonts
 
 
 class HashJarvisApp(ctk.CTk):
     def __init__(self) -> None:
+        self.brand_font_family = load_app_fonts()
+
         super().__init__()
 
         ctk.set_appearance_mode(config.APPEARANCE_MODE)
@@ -36,179 +39,174 @@ class HashJarvisApp(ctk.CTk):
     def _section_label(self, parent: ctk.CTkFrame, text: str) -> None:
         ctk.CTkLabel(
             parent,
-            text=text.upper(),
+            text=text,
             anchor="w",
-            font=ctk.CTkFont(family="Consolas", size=11, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color=theme.SECTION,
-        ).pack(padx=18, pady=(16, 4), fill="x")
+        ).pack(padx=18, pady=(18, 6), fill="x")
 
     def _ghost_button(self, parent, text: str, command) -> ctk.CTkButton:
         return ctk.CTkButton(
             parent,
             text=text,
             command=command,
-            fg_color="transparent",
-            hover_color=theme.ACCENT_GLOW,
+            fg_color=theme.SURFACE_RAISED,
+            hover_color="#1C1C1C",
             border_width=1,
-            border_color=theme.BORDER_SOFT,
-            text_color=theme.TEXT_SOFT,
+            border_color="#3F5F66",
+            text_color=theme.TEXT,
+            corner_radius=999,
+            height=34,
+            font=ctk.CTkFont(size=13, weight="bold"),
         )
 
     def _build_layout(self) -> None:
-        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
-
-        # Accent rail
-        self.accent_rail = ctk.CTkFrame(
-            self, width=3, corner_radius=0, fg_color=theme.ACCENT_DIM
-        )
-        self.accent_rail.grid(row=0, column=0, sticky="ns")
-        self.accent_rail.grid_propagate(False)
 
         # Sidebar
         self.sidebar = ctk.CTkFrame(
-            self, width=268, corner_radius=0, fg_color=theme.SIDEBAR
+            self, width=300, corner_radius=0, fg_color=theme.SIDEBAR
         )
-        self.sidebar.grid(row=0, column=1, sticky="nsew")
+        self.sidebar.grid(row=0, column=0, sticky="nsew")
         self.sidebar.grid_propagate(False)
         self.sidebar.grid_columnconfigure(0, weight=1)
 
         brand = ctk.CTkFrame(self.sidebar, fg_color="transparent")
-        brand.pack(fill="x", padx=18, pady=(22, 8))
+        brand.pack(fill="x", padx=20, pady=(26, 10))
 
         ctk.CTkLabel(
             brand,
-            text="◉  SYSTEM ONLINE",
-            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
-            text_color=theme.ONLINE,
+            text="• Innovation studio · Local AI",
+            font=ctk.CTkFont(size=11),
+            text_color=theme.TEXT_MUTED,
             anchor="w",
-        ).pack(anchor="w")
+            fg_color=theme.SURFACE_RAISED,
+            corner_radius=999,
+            height=24,
+        ).pack(anchor="w", ipadx=10)
 
         ctk.CTkLabel(
             brand,
             text=config.ASSISTANT_NAME,
-            font=ctk.CTkFont(family="Segoe UI", size=24, weight="bold"),
+            font=ctk.CTkFont(family=self.brand_font_family, size=22, weight="bold"),
             text_color=theme.ACCENT,
             anchor="w",
-        ).pack(anchor="w", pady=(6, 0))
-
-        ctk.CTkLabel(
-            brand,
-            text="Local · Offline · Private",
-            font=ctk.CTkFont(family="Consolas", size=11),
-            text_color=theme.TAGLINE,
-            anchor="w",
-        ).pack(anchor="w", pady=(2, 0))
+        ).pack(anchor="w", pady=(12, 0))
 
         ctk.CTkFrame(
             self.sidebar, height=1, fg_color=theme.BORDER, corner_radius=0
-        ).pack(fill="x", padx=18, pady=(12, 4))
+        ).pack(fill="x", padx=20, pady=(16, 6))
 
         self.new_chat_btn = ctk.CTkButton(
             self.sidebar,
-            text="▸  New Session",
+            text="New session →",
             command=self.on_new_chat,
             font=ctk.CTkFont(size=13, weight="bold"),
             height=36,
+            corner_radius=999,
         )
-        self.new_chat_btn.pack(padx=18, pady=(10, 6), fill="x")
+        self.new_chat_btn.pack(padx=20, pady=(12, 8), fill="x")
 
         self.refresh_btn = self._ghost_button(
-            self.sidebar, "↻  Sync Models", self.refresh_status
+            self.sidebar, "Sync models", self.refresh_status
         )
-        self.refresh_btn.pack(padx=18, pady=4, fill="x")
+        self.refresh_btn.pack(padx=20, pady=4, fill="x")
 
-        self._section_label(self.sidebar, "Neural Core")
+        self._section_label(self.sidebar, "Model")
         self.model_menu = ctk.CTkOptionMenu(
             self.sidebar,
             values=["No models found"],
             command=self.on_model_change,
             height=34,
+            corner_radius=10,
             fg_color=theme.SURFACE_RAISED,
-            button_color=theme.SURFACE,
-            button_hover_color=theme.ACCENT_DIM,
+            button_color="#1C1C1C",
+            button_hover_color=theme.ACCENT,
             dropdown_fg_color=theme.SURFACE_RAISED,
-            dropdown_hover_color=theme.ACCENT_GLOW,
+            dropdown_hover_color="#1C1C1C",
             text_color=theme.TEXT,
         )
-        self.model_menu.pack(padx=18, pady=4, fill="x")
+        self.model_menu.pack(padx=20, pady=4, fill="x")
 
-        self._section_label(self.sidebar, "Pull Model")
+        self._section_label(self.sidebar, "Pull model")
         self.pull_entry = ctk.CTkEntry(
             self.sidebar,
             placeholder_text="e.g. llama3.2:3b",
             height=34,
-            border_color=theme.BORDER_SOFT,
+            border_color=theme.BORDER,
             fg_color=theme.BG,
+            corner_radius=10,
         )
-        self.pull_entry.pack(padx=18, pady=4, fill="x")
+        self.pull_entry.pack(padx=20, pady=4, fill="x")
         self.pull_entry.insert(0, config.DEFAULT_MODEL)
 
         self.pull_btn = ctk.CTkButton(
             self.sidebar,
-            text="↓  Download Model",
+            text="Download model →",
             command=self.on_pull_model,
             height=34,
+            corner_radius=999,
         )
-        self.pull_btn.pack(padx=18, pady=6, fill="x")
+        self.pull_btn.pack(padx=20, pady=8, fill="x")
 
-        self._section_label(self.sidebar, "Memory Bus")
+        self._section_label(self.sidebar, "Memory")
         self.memory_switch = ctk.CTkSwitch(
             self.sidebar,
             text="ChromaDB Memory",
             command=self.on_toggle_memory,
             font=ctk.CTkFont(size=12),
             text_color=theme.TEXT_SOFT,
-            progress_color=theme.ACCENT_DIM,
+            progress_color=theme.ACCENT,
             button_color=theme.TEXT,
-            button_hover_color=theme.ACCENT,
+            button_hover_color=theme.ACCENT_HOVER,
         )
-        self.memory_switch.pack(padx=18, pady=(4, 8), anchor="w")
+        self.memory_switch.pack(padx=20, pady=(4, 8), anchor="w")
         if config.ENABLE_MEMORY_BY_DEFAULT:
             self.memory_switch.select()
 
         self.clear_memory_btn = self._ghost_button(
-            self.sidebar, "Clear Memory", self.on_clear_memory
+            self.sidebar, "Clear memory", self.on_clear_memory
         )
-        self.clear_memory_btn.pack(padx=18, pady=4, fill="x")
+        self.clear_memory_btn.pack(padx=20, pady=4, fill="x")
 
         status_wrap = ctk.CTkFrame(
             self.sidebar,
-            fg_color=theme.SURFACE,
+            fg_color=theme.SURFACE_RAISED,
             border_width=1,
             border_color=theme.BORDER,
-            corner_radius=8,
+            corner_radius=16,
         )
-        status_wrap.pack(padx=18, pady=(20, 18), fill="x", side="bottom")
+        status_wrap.pack(padx=20, pady=(20, 20), fill="x", side="bottom")
 
         ctk.CTkLabel(
             status_wrap,
-            text="STATUS",
-            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
+            text="Status",
+            font=ctk.CTkFont(size=11, weight="bold"),
             text_color=theme.TEXT_MUTED,
             anchor="w",
-        ).pack(padx=12, pady=(10, 2), fill="x")
+        ).pack(padx=14, pady=(12, 2), fill="x")
 
         self.status_label = ctk.CTkLabel(
             status_wrap,
             text="Checking Ollama...",
-            wraplength=210,
+            wraplength=250,
             justify="left",
             anchor="w",
-            font=ctk.CTkFont(family="Consolas", size=11),
+            font=ctk.CTkFont(size=12),
             text_color=theme.TEXT_SOFT,
         )
-        self.status_label.pack(padx=12, pady=(0, 12), fill="x")
+        self.status_label.pack(padx=14, pady=(0, 14), fill="x")
 
         # Main chat area
         self.main = ctk.CTkFrame(self, corner_radius=0, fg_color=theme.MAIN)
-        self.main.grid(row=0, column=2, sticky="nsew")
+        self.main.grid(row=0, column=1, sticky="nsew")
         self.main.grid_rowconfigure(1, weight=1)
         self.main.grid_columnconfigure(0, weight=1)
 
-        # Top HUD bar
+        # Top bar
         self.topbar = ctk.CTkFrame(
-            self.main, height=52, corner_radius=0, fg_color=theme.SURFACE
+            self.main, height=56, corner_radius=0, fg_color=theme.BG
         )
         self.topbar.grid(row=0, column=0, sticky="ew")
         self.topbar.grid_propagate(False)
@@ -216,22 +214,22 @@ class HashJarvisApp(ctk.CTk):
 
         ctk.CTkLabel(
             self.topbar,
-            text="SECURE CHANNEL  ·  LOCAL INFERENCE",
-            font=ctk.CTkFont(family="Consolas", size=12, weight="bold"),
+            text="Local inference · Private by design",
+            font=ctk.CTkFont(size=13),
             text_color=theme.TEXT_MUTED,
             anchor="w",
-        ).grid(row=0, column=0, sticky="w", padx=22, pady=14)
+        ).grid(row=0, column=0, sticky="w", padx=24, pady=16)
 
         self.hud_chip = ctk.CTkLabel(
             self.topbar,
-            text="  STANDBY  ",
-            font=ctk.CTkFont(family="Consolas", size=11, weight="bold"),
-            text_color=theme.ACCENT,
-            fg_color=theme.ACCENT_GLOW,
-            corner_radius=4,
-            height=26,
+            text="  Ready  ",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=theme.TEXT_ON_ACCENT,
+            fg_color=theme.ACCENT,
+            corner_radius=999,
+            height=28,
         )
-        self.hud_chip.grid(row=0, column=1, sticky="e", padx=22, pady=14)
+        self.hud_chip.grid(row=0, column=1, sticky="e", padx=24, pady=14)
 
         ctk.CTkFrame(
             self.main, height=1, fg_color=theme.BORDER, corner_radius=0
@@ -241,19 +239,19 @@ class HashJarvisApp(ctk.CTk):
             self.main,
             fg_color=theme.MAIN,
             scrollbar_button_color=theme.BORDER_SOFT,
-            scrollbar_button_hover_color=theme.ACCENT_DIM,
+            scrollbar_button_hover_color=theme.ACCENT,
         )
-        self.chat_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=(14, 8))
+        self.chat_frame.grid(row=1, column=0, sticky="nsew", padx=24, pady=(16, 8))
         self.chat_frame.grid_columnconfigure(0, weight=1)
 
         self.composer = ctk.CTkFrame(
             self.main,
-            fg_color=theme.COMPOSER,
+            fg_color=theme.SURFACE,
             border_width=1,
             border_color=theme.BORDER,
-            corner_radius=12,
+            corner_radius=16,
         )
-        self.composer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 18))
+        self.composer.grid(row=2, column=0, sticky="ew", padx=24, pady=(0, 20))
         self.composer.grid_columnconfigure(0, weight=1)
 
         self.input_box = ctk.CTkTextbox(
@@ -261,30 +259,31 @@ class HashJarvisApp(ctk.CTk):
             height=92,
             fg_color=theme.BG,
             border_width=1,
-            border_color=theme.BORDER_SOFT,
+            border_color=theme.BORDER,
             text_color=theme.TEXT,
             font=ctk.CTkFont(size=14),
+            corner_radius=12,
         )
-        self.input_box.grid(row=0, column=0, sticky="ew", padx=(12, 8), pady=12)
+        self.input_box.grid(row=0, column=0, sticky="ew", padx=(14, 10), pady=14)
         self.input_box.bind("<Control-Return>", self._on_ctrl_enter)
 
         self.send_btn = ctk.CTkButton(
             self.composer,
-            text="Transmit\nCtrl+Enter",
-            width=118,
+            text="Send →",
+            width=110,
             height=92,
             command=self.on_send,
-            font=ctk.CTkFont(size=12, weight="bold"),
-            corner_radius=8,
+            font=ctk.CTkFont(size=14, weight="bold"),
+            corner_radius=999,
         )
-        self.send_btn.grid(row=0, column=1, padx=(0, 12), pady=12)
+        self.send_btn.grid(row=0, column=1, padx=(0, 14), pady=14)
 
         self._add_system_note(
-            f"Good day. {config.ASSISTANT_NAME} is online and running locally.\n"
+            f"Welcome. {config.ASSISTANT_NAME} is online and running locally.\n"
             "1) Ensure Ollama is running\n"
             "2) Select or download a model from the sidebar\n"
             "3) Ask anything — Ctrl+Enter to send\n"
-            "How may I assist you?"
+            "How may I help you build?"
         )
 
     def _on_ctrl_enter(self, _event=None):
@@ -294,20 +293,20 @@ class HashJarvisApp(ctk.CTk):
     def _add_system_note(self, text: str) -> None:
         wrap = ctk.CTkFrame(
             self.chat_frame,
-            fg_color=theme.SURFACE,
+            fg_color="#0A0A0A",
             border_width=1,
             border_color=theme.BORDER,
-            corner_radius=8,
+            corner_radius=16,
         )
         wrap.grid(sticky="ew", pady=(0, 14))
 
         ctk.CTkLabel(
             wrap,
-            text="// SYSTEM",
-            font=ctk.CTkFont(family="Consolas", size=10, weight="bold"),
-            text_color=theme.ACCENT_DIM,
+            text="System",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=theme.ACCENT,
             anchor="w",
-        ).pack(padx=14, pady=(10, 2), anchor="w")
+        ).pack(padx=16, pady=(14, 2), anchor="w")
 
         note = ctk.CTkLabel(
             wrap,
@@ -318,7 +317,7 @@ class HashJarvisApp(ctk.CTk):
             font=ctk.CTkFont(size=13),
             text_color=theme.SYSTEM_NOTE,
         )
-        note.pack(padx=14, pady=(0, 12), anchor="w")
+        note.pack(padx=16, pady=(0, 14), anchor="w")
 
     def _add_bubble(self, role: str, text: str = "") -> ctk.CTkTextbox:
         is_user = role == "user"
@@ -328,9 +327,13 @@ class HashJarvisApp(ctk.CTk):
 
         label = ctk.CTkLabel(
             outer,
-            text="YOU" if is_user else config.ASSISTANT_NAME,
+            text="You" if is_user else config.ASSISTANT_NAME,
             anchor="e" if is_user else "w",
-            font=ctk.CTkFont(family="Consolas", size=11, weight="bold"),
+            font=ctk.CTkFont(
+                family=self.brand_font_family if not is_user else "Segoe UI",
+                size=12 if not is_user else 11,
+                weight="bold" if not is_user else "normal",
+            ),
             text_color=theme.USER_LABEL if is_user else theme.ASSISTANT_LABEL,
         )
         label.grid(row=0, column=0, sticky="e" if is_user else "w", padx=6, pady=(0, 2))
@@ -342,10 +345,10 @@ class HashJarvisApp(ctk.CTk):
             activate_scrollbars=False,
             fg_color=theme.USER_BUBBLE if is_user else theme.ASSISTANT_BUBBLE,
             border_width=1,
-            border_color=theme.ACCENT_GLOW if is_user else theme.BORDER,
+            border_color="#3F5F66" if is_user else theme.BORDER,
             text_color=theme.TEXT,
             font=ctk.CTkFont(size=14),
-            corner_radius=10,
+            corner_radius=16,
         )
         bubble.grid(
             row=1,
@@ -379,9 +382,9 @@ class HashJarvisApp(ctk.CTk):
         self.new_chat_btn.configure(state=state)
         self.refresh_btn.configure(state=state)
         self.hud_chip.configure(
-            text="  PROCESSING  " if busy else "  READY  ",
-            text_color=theme.WARN if busy else theme.ONLINE,
-            fg_color="#3F2A14" if busy else "#0F2E24",
+            text="  Processing  " if busy else "  Ready  ",
+            text_color=theme.TEXT_ON_ACCENT if not busy else "#050505",
+            fg_color=theme.WARN if busy else theme.ACCENT,
         )
 
     def refresh_status(self) -> None:
@@ -404,17 +407,17 @@ class HashJarvisApp(ctk.CTk):
             text = "Ollama: OFFLINE\nStart the Ollama app\nor run `ollama serve`."
             if not self._busy:
                 self.hud_chip.configure(
-                    text="  OFFLINE  ",
-                    text_color=theme.OFFLINE,
-                    fg_color="#3F1D1D",
+                    text="  Offline  ",
+                    text_color="#050505",
+                    fg_color=theme.OFFLINE,
                 )
         elif not status["models"]:
             text = "Ollama: ONLINE\nNo models yet —\npull one below."
             if not self._busy:
                 self.hud_chip.configure(
-                    text="  NO MODEL  ",
-                    text_color=theme.WARN,
-                    fg_color="#3F2A14",
+                    text="  No model  ",
+                    text_color="#050505",
+                    fg_color=theme.WARN,
                 )
         else:
             memory = "ON" if status["memory_enabled"] else "OFF"
@@ -427,9 +430,9 @@ class HashJarvisApp(ctk.CTk):
                 text += f"\nNote: {status['memory_error'][:80]}"
             if not self._busy:
                 self.hud_chip.configure(
-                    text="  READY  ",
-                    text_color=theme.ONLINE,
-                    fg_color="#0F2E24",
+                    text="  Ready  ",
+                    text_color=theme.TEXT_ON_ACCENT,
+                    fg_color=theme.ACCENT,
                 )
 
         self.status_label.configure(text=text)

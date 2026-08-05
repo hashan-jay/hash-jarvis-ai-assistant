@@ -1,4 +1,4 @@
-"""Entry point for HASH-JARVIS."""
+"""Entry point for ZYNTAKSgenAI."""
 
 from gui.app import run_app
 

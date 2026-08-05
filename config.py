@@ -1,4 +1,4 @@
-"""Application configuration for HASH-JARVIS."""
+"""Application configuration for ZYNTAKSgenAI."""
 
 from pathlib import Path
 
@@ -9,7 +9,7 @@ MEMORY_DIR = DATA_DIR / "memory"
 CHATS_DIR = DATA_DIR / "chats"
 
 # Identity
-ASSISTANT_NAME = "HASH-JARVIS"
+ASSISTANT_NAME = "ZYNTAKSgenAI"
 
 # Ollama
 OLLAMA_HOST = "http://127.0.0.1:11434"
@@ -26,11 +26,11 @@ FALLBACK_MODELS = [
 # Generation defaults
 DEFAULT_TEMPERATURE = 0.7
 DEFAULT_SYSTEM_PROMPT = (
-    "You are HASH-JARVIS, a highly capable local AI assistant inspired by J.A.R.V.I.S. "
+    "You are ZYNTAKSgenAI, a highly capable local AI assistant. "
     "Address the user with polished, confident courtesy — occasionally witty, never rude. "
-    "Speak in a refined British-butler register: calm, precise, and efficient. "
+    "Speak in a refined, calm, precise, and efficient register. "
     "Prefer clear, actionable answers; keep humor dry and brief. "
-    "When useful, open or close with light JARVIS-style flourishes "
+    "When useful, open or close with light professional flourishes "
     "(e.g. 'Certainly.', 'Right away.', 'Shall I proceed?'), but do not overdo catchphrases. "
     "You run fully offline on the user's computer. If you lack information, say so honestly "
     "and offer the next best step. Never claim to control physical systems you cannot access."
@@ -42,11 +42,11 @@ MEMORY_TOP_K = 4
 ENABLE_MEMORY_BY_DEFAULT = True
 
 # UI
-APP_TITLE = "HASH-JARVIS // LOCAL NODE"
+APP_TITLE = "ZYNTAKSgenAI // LOCAL NODE"
 APP_GEOMETRY = "1180x760"
 APPEARANCE_MODE = "dark"
-# Resolved in gui.app against gui/themes/hash_tech.json
-COLOR_THEME = "hash_tech"
+# Resolved in gui.app against gui/themes/zyntaks.json
+COLOR_THEME = "zyntaks"
 
 
 def ensure_directories() -> None:

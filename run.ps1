@@ -1,4 +1,4 @@
-# Launch HASH-JARVIS
+# Launch ZYNTAKSgenAI
 $ErrorActionPreference = "Stop"
 
 if (-not (Test-Path ".\.venv\Scripts\python.exe")) {
