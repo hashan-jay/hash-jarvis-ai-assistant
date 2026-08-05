@@ -42,10 +42,11 @@ MEMORY_TOP_K = 4
 ENABLE_MEMORY_BY_DEFAULT = True
 
 # UI
-APP_TITLE = "HASH-JARVIS"
-APP_GEOMETRY = "1100x720"
+APP_TITLE = "HASH-JARVIS // LOCAL NODE"
+APP_GEOMETRY = "1180x760"
 APPEARANCE_MODE = "dark"
-COLOR_THEME = "blue"
+# Resolved in gui.app against gui/themes/hash_tech.json
+COLOR_THEME = "hash_tech"
 
 
 def ensure_directories() -> None:
